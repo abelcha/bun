@@ -1,5 +1,4 @@
-
-const glob = new Bun.Glob("**/*.{png,ttf}")
+const glob = new Bun.Glob("**/*.{png,ttf}");
 
 for (const file of glob.scanSync("test/integration/expo-app/assets/")) {
   console.log(file); // => "index.ts"

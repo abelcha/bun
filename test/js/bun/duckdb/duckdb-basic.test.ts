@@ -1,5 +1,5 @@
-import { describe, test, expect } from "bun:test";
 import { Database } from "bun:duckdb";
+import { describe, expect, test } from "bun:test";
 
 describe("bun:duckdb", () => {
   test("should create a database instance", async () => {
@@ -30,31 +30,31 @@ describe("bun:duckdb", () => {
 
   test("should support prepared statements with parameters", async () => {
     const db = new Database(":memory:");
-    
+
     // Create a table
     await db.run("CREATE TABLE users (id INTEGER, name VARCHAR)");
     await db.run("INSERT INTO users VALUES (1, 'Alice'), (2, 'Bob')");
-    
+
     // Query with parameters
     const stmt = await db.prepare("SELECT * FROM users WHERE id = $1");
     const result = await stmt.get(1);
     expect(result).toEqual({ id: 1, name: "Alice" });
-    
+
     await db.close();
   });
 
   test("should iterate over results", async () => {
     const db = new Database(":memory:");
     const stmt = await db.query("SELECT * FROM (VALUES (1), (2), (3)) AS t(num)");
-    
+
     const results = [];
     for await (const row of stmt.iterate()) {
       results.push(row);
     }
-    
+
     expect(results).toHaveLength(3);
     expect(results[0]).toEqual({ num: 1 });
-    
+
     await db.close();
   });
 
@@ -62,38 +62,38 @@ describe("bun:duckdb", () => {
     const db = new Database(":memory:");
     const stmt = await db.query("SELECT * FROM (VALUES (1, 'a'), (2, 'b')) AS t(id, name)");
     const results = await stmt.values();
-    
+
     expect(results).toEqual([
       [1, "a"],
       [2, "b"],
     ]);
-    
+
     await db.close();
   });
 
   test("should finalize statements", async () => {
     const db = new Database(":memory:");
     const stmt = await db.query("SELECT 1");
-    
+
     expect(stmt.isFinalized).toBe(false);
     stmt.finalize();
     expect(stmt.isFinalized).toBe(true);
-    
+
     // Should throw after finalization
     await expect(stmt.get()).rejects.toThrow("Statement has been finalized");
-    
+
     await db.close();
   });
 
   test("should support Symbol.dispose", async () => {
     const db = new Database(":memory:");
     const stmt = await db.query("SELECT 1");
-    
+
     {
       using disposableStmt = stmt;
       expect(disposableStmt.isFinalized).toBe(false);
     }
-    
+
     expect(stmt.isFinalized).toBe(true);
     await db.close();
   });

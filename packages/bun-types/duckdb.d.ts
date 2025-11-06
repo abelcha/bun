@@ -293,9 +293,7 @@ declare module "bun:duckdb" {
      *
      * @param params Parameters to bind to the query
      */
-    run(
-      ...params: any[]
-    ): Promise<{
+    run(...params: any[]): Promise<{
       changes: number;
       lastInsertRowid: number;
     }>;

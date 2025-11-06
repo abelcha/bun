@@ -582,7 +582,7 @@ bar\n`,
   describe("escaped_newline", () => {
     const printArgs = /* ts */ `console.log(JSON.stringify(process.argv))`;
 
-    TestBuilder.command/* sh */ `${BUN} run ./code.ts hi hello \
+    TestBuilder.command /* sh */ `${BUN} run ./code.ts hi hello \
     on a newline!
   `
       .ensureTempDir()
@@ -590,7 +590,7 @@ bar\n`,
       .stdout(out => expect(JSON.parse(out).slice(2)).toEqual(["hi", "hello", "on", "a", "newline!"]))
       .runAsTest("single");
 
-    TestBuilder.command/* sh */ `${BUN} run ./code.ts hi hello \
+    TestBuilder.command /* sh */ `${BUN} run ./code.ts hi hello \
     on a newline! \
     and \
     a few \
@@ -603,7 +603,7 @@ bar\n`,
       )
       .runAsTest("many");
 
-    TestBuilder.command/* sh */ `${BUN} run ./code.ts hi hello \
+    TestBuilder.command /* sh */ `${BUN} run ./code.ts hi hello \
     on a newline! \
     ooga"
 booga"
@@ -1211,7 +1211,7 @@ describe("deno_task", () => {
 });
 
 describe("if_clause", () => {
-  TestBuilder.command/* sh */ `
+  TestBuilder.command /* sh */ `
 # The name of the package we're interested in
 package_name=react
 
@@ -2070,7 +2070,7 @@ describe("subshell", () => {
     }
   }`;
 
-  TestBuilder.command/* sh */ `
+  TestBuilder.command /* sh */ `
   mkdir sharp-test
   cd sharp-test
   echo ${sharppkgjson} > package.json
@@ -2083,16 +2083,16 @@ describe("subshell", () => {
     .env(bunEnv)
     .runAsTest("sharp");
 
-  TestBuilder.command/* sh */ `( ( ( ( echo HI! ) ) ) )`.stdout("HI!\n").runAsTest("multiple levels");
-  TestBuilder.command/* sh */ `(
+  TestBuilder.command /* sh */ `( ( ( ( echo HI! ) ) ) )`.stdout("HI!\n").runAsTest("multiple levels");
+  TestBuilder.command /* sh */ `(
     echo HELLO! ;
     echo HELLO AGAIN!
     )`
     .stdout("HELLO!\nHELLO AGAIN!\n")
     .runAsTest("multiline");
-  TestBuilder.command/* sh */ `(exit 42)`.exitCode(42).runAsTest("exit code");
-  TestBuilder.command/* sh */ `(exit 42); echo hi`.exitCode(0).stdout("hi\n").runAsTest("exit code 2");
-  TestBuilder.command/* sh */ `
+  TestBuilder.command /* sh */ `(exit 42)`.exitCode(42).runAsTest("exit code");
+  TestBuilder.command /* sh */ `(exit 42); echo hi`.exitCode(0).stdout("hi\n").runAsTest("exit code 2");
+  TestBuilder.command /* sh */ `
   VAR1=VALUE1
   VAR2=VALUE2
   VAR3=VALUE3
@@ -2108,7 +2108,7 @@ describe("subshell", () => {
     .stdout("VALUE1 VALUE2 VALUE3\nyou cant see me my time is now\nVALUE1 VALUE2 VALUE3\n")
     .runAsTest("copy of environment");
 
-  TestBuilder.command/* sh */ `
+  TestBuilder.command /* sh */ `
   mkdir foo
   (
     echo $PWD
@@ -2138,7 +2138,7 @@ describe("subshell", () => {
   TestBuilder.command`\(echo hi \)`.stderr("bun: command not found: (echo\n").exitCode(1).runAsTest("escaped subshell");
   TestBuilder.command`echo \\\(hi\\\)`.stdout("\\(hi\\)\n").runAsTest("escaped subshell 2");
 
-  TestBuilder.command/* sh */ `
+  TestBuilder.command /* sh */ `
   mkdir dir
   (
     cd dir
@@ -2150,7 +2150,7 @@ describe("subshell", () => {
     .stdout(`$TEMP_DIR${sep}dir\n$TEMP_DIR\n`)
     .runAsTest("pipeline in subshell");
 
-  TestBuilder.command/* sh */ `
+  TestBuilder.command /* sh */ `
   mkdir dir
   (pwd) | cat
   (cd dir; pwd) | cat
@@ -2160,7 +2160,7 @@ describe("subshell", () => {
     .stdout(`$TEMP_DIR\n$TEMP_DIR${sep}dir\n$TEMP_DIR\n`)
     .runAsTest("subshell in pipeline");
 
-  TestBuilder.command/* sh */ `
+  TestBuilder.command /* sh */ `
   mkdir dir
   (pwd) | cat
   (cd dir; pwd) | cat
@@ -2170,7 +2170,7 @@ describe("subshell", () => {
     .stdout(`$TEMP_DIR\n$TEMP_DIR${sep}dir\n$TEMP_DIR\n`)
     .runAsTest("subshell in pipeline");
 
-  TestBuilder.command/* sh */ `
+  TestBuilder.command /* sh */ `
   mkdir foo
   ( ( (cd foo ; pwd) | cat) ) | ( ( (cat) ) | cat )
 
@@ -2179,7 +2179,7 @@ describe("subshell", () => {
     .stdout(`$TEMP_DIR${sep}foo\n`)
     .runAsTest("imbricated subshells and pipelines");
 
-  TestBuilder.command/* sh */ `
+  TestBuilder.command /* sh */ `
   echo (echo)
   `
     .error("Unexpected token: `(`")
@@ -2187,7 +2187,7 @@ describe("subshell", () => {
 
   describe("ported", () => {
     // test_oE 'effect of subshell'
-    TestBuilder.command/* sh */ `
+    TestBuilder.command /* sh */ `
   a=1
   # (a=2; echo $a; exit; echo not reached)
   # NOTE: We actually implemented exit wrong so changing this for now until we fix it
@@ -2198,14 +2198,14 @@ describe("subshell", () => {
       .runAsTest("effect of subshell");
 
     // test_x -e 23 'exit status of subshell'
-    TestBuilder.command/* sh */ `
+    TestBuilder.command /* sh */ `
   (true; exit 23)
   `
       .exitCode(23)
       .runAsTest("exit status of subshell");
 
     // test_oE 'redirection on subshell'
-    TestBuilder.command/* sh */ `
+    TestBuilder.command /* sh */ `
   (echo 1; echo 2; echo 3; echo 4) >sub_out
   # (tail -n 2) <sub_out
   cat sub_out
@@ -2215,14 +2215,14 @@ describe("subshell", () => {
       .runAsTest("redirection on subshell");
 
     // test_oE 'subshell ending with semicolon'
-    TestBuilder.command/* sh */ `
+    TestBuilder.command /* sh */ `
 (echo foo;)
 `
       .stdout("foo\n")
       .runAsTest("subshell ending with semicolon");
 
     // test_oE 'subshell ending with asynchronous list'
-    TestBuilder.command/* sh */ `
+    TestBuilder.command /* sh */ `
 mkfifo fifo1
 (echo foo >fifo1&)
 cat fifo1
@@ -2232,7 +2232,7 @@ cat fifo1
       .runAsTest("subshell ending with asynchronous list");
 
     // test_oE 'newlines in subshell'
-    TestBuilder.command/* sh */ `
+    TestBuilder.command /* sh */ `
 (
 echo foo
 )
@@ -2241,7 +2241,7 @@ echo foo
       .runAsTest("newlines in subshell");
 
     // test_oE 'effect of brace grouping'
-    TestBuilder.command/* sh */ `
+    TestBuilder.command /* sh */ `
 a=1
 { a=2; echo $a; exit; echo not reached; }
 echo $a
@@ -2251,7 +2251,7 @@ echo $a
       .runAsTest("effect of brace grouping");
 
     // test_x -e 29 'exit status of brace grouping'
-    TestBuilder.command/* sh */ `
+    TestBuilder.command /* sh */ `
 { true; sh -c 'exit 29'; }
 `
       .exitCode(29)
@@ -2259,7 +2259,7 @@ echo $a
       .runAsTest("exit status of brace grouping");
 
     // test_oE 'redirection on brace grouping'
-    TestBuilder.command/* sh */ `
+    TestBuilder.command /* sh */ `
 { echo 1; echo 2; echo 3; echo 4; } >brace_out
 { tail -n 2; } <brace_out
 `
@@ -2268,7 +2268,7 @@ echo $a
       .runAsTest("redirection on brace grouping");
 
     // test_oE 'brace grouping ending with semicolon'
-    TestBuilder.command/* sh */ `
+    TestBuilder.command /* sh */ `
 { echo foo; }
 `
       .stdout("foo\n")
@@ -2276,7 +2276,7 @@ echo $a
       .runAsTest("brace grouping ending with semicolon");
 
     // test_oE 'brace grouping ending with asynchronous list'
-    TestBuilder.command/* sh */ `
+    TestBuilder.command /* sh */ `
 mkfifo fifo1
 { echo foo >fifo1& }
 cat fifo1
@@ -2286,7 +2286,7 @@ cat fifo1
       .runAsTest("brace grouping ending with asynchronous list");
 
     // test_oE 'newlines in brace grouping'
-    TestBuilder.command/* sh */ `
+    TestBuilder.command /* sh */ `
 {
 echo foo
 }

@@ -1,7 +1,7 @@
 // Hardcoded module "duckdb"
 // Wrapper around @duckdb/node-api to provide a bun:sqlite-compatible API
 
-import type { DuckDBInstance, DuckDBConnection, DuckDBResult, DuckDBDataChunk } from "@duckdb/node-api";
+import type { DuckDBConnection, DuckDBInstance } from "@duckdb/node-api";
 
 let duckdbModule: any;
 
@@ -54,7 +54,7 @@ class Statement {
     }
 
     const prepared = await this.#connection.prepare(this.#sql);
-    
+
     // Bind parameters if provided
     if (params.length > 0) {
       const bindParams = isArray(params[0]) ? params[0] : params;
@@ -83,7 +83,7 @@ class Statement {
 
     const result = await prepared.run();
     const chunk = await result.fetchChunk();
-    
+
     if (chunk.rowCount === 0) {
       return undefined;
     }
@@ -92,7 +92,7 @@ class Statement {
     const row: any = {};
     const columns = chunk.getColumns();
     const columnNames = result.columnNames();
-    
+
     for (let i = 0; i < columnNames.length; i++) {
       row[columnNames[i]] = columns[i][0];
     }
@@ -106,7 +106,7 @@ class Statement {
     }
 
     const prepared = await this.#connection.prepare(this.#sql);
-    
+
     // Bind parameters if provided
     if (params.length > 0) {
       const bindParams = isArray(params[0]) ? params[0] : params;
@@ -164,7 +164,7 @@ class Statement {
     }
 
     const prepared = await this.#connection.prepare(this.#sql);
-    
+
     // Bind parameters
     if (params.length > 0) {
       const bindParams = isArray(params[0]) ? params[0] : params;
@@ -201,7 +201,7 @@ class Statement {
     }
 
     const prepared = await this.#connection.prepare(this.#sql);
-    
+
     // Bind parameters
     if (params.length > 0) {
       const bindParams = isArray(params[0]) ? params[0] : params;
@@ -279,20 +279,20 @@ class Database {
 
   async #initialize() {
     const duckdb = loadDuckDBModule();
-    
+
     const config: any = {};
-    
+
     // Map options to DuckDB config
     if (this.#options.readonly) {
       config.access_mode = "READ_ONLY";
     }
-    
+
     if (this.#filename === ":memory:") {
       this.#instance = await duckdb.DuckDBInstance.create(":memory:", config);
     } else {
       this.#instance = await duckdb.DuckDBInstance.create(this.#filename, config);
     }
-    
+
     this.#connection = await this.#instance.connect();
   }
 
@@ -337,9 +337,9 @@ class Database {
     if (this.#closed) {
       return;
     }
-    
+
     this.#closed = true;
-    
+
     try {
       // DuckDB connections close automatically when they're garbage collected
       this.#connection = null;

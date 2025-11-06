@@ -11,7 +11,7 @@ Bun.serve({
     Array.from(new Bun.Glob("**").scanSync("public")).map(path => [
       "/" + path,
       Bun.file("public/" + path),
-    ])
+    ]),
   ),
 });
 ```
@@ -43,3 +43,4 @@ Bun.serve({
     "/api/time": () => Response.json({ time: Date.now() }),
   },
 });
+```
