@@ -2636,6 +2636,7 @@ pub const FetchFlags = enum {
 pub const HardcodedModule = enum {
     bun,
     @"abort-controller",
+    @"bun:duckdb",
     @"bun:ffi",
     @"bun:jsc",
     @"bun:main",
@@ -2727,6 +2728,7 @@ pub const HardcodedModule = enum {
         .{ "bun:jsc", .@"bun:jsc" },
         .{ "bun:main", .@"bun:main" },
         .{ "bun:test", .@"bun:test" },
+        .{ "bun:duckdb", .@"bun:duckdb" },
         .{ "bun:sqlite", .@"bun:sqlite" },
         .{ "bun:wrap", .@"bun:wrap" },
         .{ "bun:internal-for-testing", .@"bun:internal-for-testing" },
