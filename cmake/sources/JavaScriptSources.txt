@@ -32,6 +32,7 @@ src/js/builtins/UtilInspect.ts
 src/js/builtins/WritableStreamDefaultController.ts
 src/js/builtins/WritableStreamDefaultWriter.ts
 src/js/builtins/WritableStreamInternals.ts
+src/js/bun/duckdb.ts
 src/js/bun/ffi.ts
 src/js/bun/sql.ts
 src/js/bun/sqlite.ts
